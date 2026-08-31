@@ -813,11 +813,11 @@ function Reports() {
 
                     <Divider sx={{ my: 3 }} />
 
-                    {categoryData
-                      .sort(
-                        (a, b) => b.value - a.value
-                      )
-                      .map((category) => {
+                    {[...categoryData]
+  .sort(
+    (a, b) => b.value - a.value
+  )
+  .map((category) => {
                         const percentage =
                           totalExpense > 0
                             ? Math.round(

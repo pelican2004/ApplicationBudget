@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../database"
+		},
+		{
+			"path": "../README.md"
+		},
+		{
+			"path": "../server"
+		}
+	]
+}
