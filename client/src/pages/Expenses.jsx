@@ -368,17 +368,26 @@ function Expenses() {
   return (
     <>
       <Sidebar />
-
+  
       <Box
-  sx={{
-    width: "100%",
-    height: {
-      xs: 300,
-      md: 350,
-    },
-    mb: 4,
-  }}
->
+        sx={{
+          ml: {
+            xs: 0,
+            md: "240px",
+          },
+          width: {
+            xs: "100%",
+            md: "calc(100% - 240px)",
+          },
+          minHeight: "100vh",
+          p: {
+            xs: 2,
+            md: 4,
+          },
+          boxSizing: "border-box",
+          mb: 4,
+        }}
+      >
       
         {/* =====================================
             AI BON FISCAL
