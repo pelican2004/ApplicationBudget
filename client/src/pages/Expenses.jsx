@@ -85,11 +85,6 @@ function Expenses() {
     name,
     value,
   }));
-
-  // ==========================================
-  // AI BON FISCAL
-  // ==========================================
-
   const [selectedFile, setSelectedFile] =
     useState(null);
 
@@ -108,11 +103,6 @@ function Expenses() {
       [e.target.name]: e.target.value,
     });
   };
-
-  // ==========================================
-  // SELECTEAZĂ BON
-  // ==========================================
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -154,11 +144,6 @@ function Expenses() {
     setAiMessage("");
     setAiSuccess(false);
   };
-
-  // ==========================================
-  // ANALIZEAZĂ BON CU AI
-  // ==========================================
-
   const handleAnalyzeReceipt = async () => {
     if (!selectedFile) {
       alert(
@@ -193,11 +178,6 @@ function Expenses() {
           "AI-ul nu a returnat datele bonului."
         );
       }
-
-      // ========================================
-      // CONSTRUIM DESCRIEREA
-      // ========================================
-
       const productLines =
         Array.isArray(receipt.products)
           ? receipt.products.map(
@@ -265,11 +245,6 @@ function Expenses() {
       setUploading(false);
     }
   };
-
-  // ==========================================
-  // ÎNCARCĂ CHELTUIELILE
-  // ==========================================
-
   const loadExpenses = async () => {
     const user = JSON.parse(
       localStorage.getItem("user")
@@ -294,11 +269,6 @@ function Expenses() {
       );
     }
   };
-
-  // ==========================================
-  // ADAUGĂ CHELTUIALĂ
-  // ==========================================
-
   const handleSubmit = async () => {
     try {
       const res = await api.post(
@@ -334,11 +304,6 @@ function Expenses() {
       );
     }
   };
-
-  // ==========================================
-  // ȘTERGE CHELTUIALĂ
-  // ==========================================
-
   const handleDelete = async (id) => {
     try {
       const res = await api.delete(
