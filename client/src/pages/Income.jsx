@@ -27,11 +27,6 @@ function Income() {
       [e.target.name]: e.target.value,
     });
   };
-
-  // ==========================================
-  // ÎNCARCĂ VENITURILE
-  // ==========================================
-
   const loadIncomes = async () => {
     const user = JSON.parse(
       localStorage.getItem("user")
@@ -56,11 +51,6 @@ function Income() {
       );
     }
   };
-
-  // ==========================================
-  // ADAUGĂ VENIT
-  // ==========================================
-
   const handleSubmit = async () => {
     try {
       const res = await api.post(
@@ -90,11 +80,6 @@ function Income() {
       );
     }
   };
-
-  // ==========================================
-  // ȘTERGE VENIT
-  // ==========================================
-
   const handleDelete = async (id) => {
     try {
       const res = await api.delete(
