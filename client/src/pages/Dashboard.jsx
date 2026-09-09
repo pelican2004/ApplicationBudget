@@ -59,11 +59,6 @@ function Dashboard() {
       if (!user?._id) {
         return;
       }
-
-      // =====================================
-      // VENITURI
-      // =====================================
-
       const incomeRes = await api.get(`/income/${user._id}`);
 
       const incomes = incomeRes.data.incomes || [];
@@ -73,11 +68,6 @@ function Dashboard() {
           sum + Number(income.amount || 0),
         0
       );
-
-      // =====================================
-      // CHELTUIELI
-      // =====================================
-
       const expenseRes = await api.get(
         `/expense/${user._id}`
       );
@@ -89,11 +79,6 @@ function Dashboard() {
           sum + Number(expense.amount || 0),
         0
       );
-
-      // =====================================
-      // FACTURI
-      // =====================================
-
       let unpaid = 0;
       let unpaidAmount = 0;
       let upcoming = [];
@@ -147,11 +132,6 @@ function Dashboard() {
           error
         );
       }
-
-      // =====================================
-      // ECONOMII
-      // =====================================
-
       let saved = 0;
       let target = 0;
 
@@ -226,11 +206,6 @@ function Dashboard() {
               100
             )
           : 0;
-
-      // =====================================
-      // ULTIMELE TRANZACȚII
-      // =====================================
-
       const allActivities = [
         ...incomes.map((income) => ({
           type: "income",
@@ -264,11 +239,6 @@ function Dashboard() {
           new Date(b.date) -
           new Date(a.date)
       );
-
-      // =====================================
-      // SALVĂM DATELE
-      // =====================================
-
       setIncomeTotal(totalIncome);
       setExpenseTotal(totalExpense);
 
@@ -301,11 +271,6 @@ function Dashboard() {
   useEffect(() => {
     loadDashboard();
   }, []);
-
-  // =====================================
-  // FORMATARE BANI
-  // =====================================
-
   const formatMoney = (value) => {
     return Number(value).toLocaleString(
       "ro-RO",
@@ -315,11 +280,6 @@ function Dashboard() {
       }
     );
   };
-
-  // =====================================
-  // FORMATARE DATĂ
-  // =====================================
-
   const formatDate = (date) => {
     if (!date) {
       return "-";
@@ -329,11 +289,6 @@ function Dashboard() {
       date
     ).toLocaleDateString("ro-RO");
   };
-
-  // =====================================
-  // GRAFIC
-  // =====================================
-
   const chartData = [
     {
       name: "Finanțe",
