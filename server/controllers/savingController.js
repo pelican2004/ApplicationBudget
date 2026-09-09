@@ -4,11 +4,6 @@ const SavingTransaction = require(
 );
 const Income = require("../models/Income");
 const Expense = require("../models/Expense");
-
-// =====================================================
-// CREEAZĂ OBIECTIV DE ECONOMII
-// =====================================================
-
 exports.createSaving = async (req, res) => {
   try {
     const {
@@ -55,11 +50,6 @@ exports.createSaving = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// OBIECTIVELE UTILIZATORULUI AUTENTIFICAT
-// =====================================================
-
 exports.getSavings = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -87,17 +77,9 @@ exports.getSavings = async (req, res) => {
     });
   }
 };
-
-/// =====================================================
-// ȘTERGE OBIECTIV ȘI RESTITUIE BANII ECONOMISIȚI
-// =====================================================
-
 exports.deleteSaving = async (req, res) => {
   try {
     const userId = req.user._id;
-
-    // Verificăm dacă obiectivul aparține
-    // utilizatorului autentificat
     const saving = await Saving.findOne({
       _id: req.params.id,
       user: userId,
@@ -110,23 +92,15 @@ exports.deleteSaving = async (req, res) => {
           "Obiectivul nu a fost găsit sau nu îți aparține.",
       });
     }
-
-    // Luăm toate depunerile obiectivului
     const transactions =
       await SavingTransaction.find({
         saving: saving._id,
       });
-
-    // Calculăm suma care se află efectiv
-    // în obiectiv
     const savedAmount = transactions.reduce(
       (sum, transaction) =>
         sum + Number(transaction.amount || 0),
       0
     );
-
-    // Dacă există bani economisiți,
-    // îi restituim în Venituri
     if (savedAmount > 0) {
       await Income.create({
         user: userId,
@@ -137,9 +111,6 @@ exports.deleteSaving = async (req, res) => {
         date: new Date(),
       });
     }
-
-    // Ștergem cheltuielile care au fost create
-    // de depunerile acestui obiectiv
     const transactionIds = transactions.map(
       (transaction) => transaction._id
     );
@@ -152,13 +123,9 @@ exports.deleteSaving = async (req, res) => {
         },
       });
     }
-
-    // Ștergem tranzacțiile obiectivului
     await SavingTransaction.deleteMany({
       saving: saving._id,
     });
-
-    // Ștergem obiectivul
     await Saving.findByIdAndDelete(
       saving._id
     );
