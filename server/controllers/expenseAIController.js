@@ -23,8 +23,6 @@ const analyzeExpenseReceipt = async (req, res) => {
       req.file.buffer.toString("base64");
 
     let fileContent;
-
-    // PDF
     if (
       req.file.mimetype ===
       "application/pdf"
@@ -37,8 +35,6 @@ const analyzeExpenseReceipt = async (req, res) => {
           `data:application/pdf;base64,${base64File}`,
       };
     }
-
-    // Imagine
     else {
       fileContent = {
         type: "input_image",
