@@ -19,42 +19,22 @@ const authMiddleware = require(
 const receiptUpload = require(
   "../middleware/receiptUpload"
 );
-
-// =====================================================
-// ANALIZEAZĂ BONUL CU AI
-// =====================================================
-
 router.post(
   "/analyze",
   authMiddleware,
   receiptUpload.single("file"),
   analyzeExpenseReceipt
 );
-
-// =====================================================
-// ADAUGĂ CHELTUIALĂ
-// =====================================================
-
 router.post(
   "/",
   authMiddleware,
   createExpense
 );
-
-// =====================================================
-// OBȚINE CHELTUIELILE
-// =====================================================
-
 router.get(
   "/:user",
   authMiddleware,
   getExpenses
 );
-
-// =====================================================
-// ȘTERGE CHELTUIALĂ
-// =====================================================
-
 router.delete(
   "/:id",
   authMiddleware,
