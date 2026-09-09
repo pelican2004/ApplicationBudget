@@ -21,9 +21,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <Routes>
-      {/* ============================= */}
-      {/* RUTE PUBLICE */}
-      {/* ============================= */}
 
       <Route
         path="/"
@@ -54,11 +51,6 @@ function App() {
         path="/reset-password"
         element={<ResetPassword />}
       />
-
-      {/* ============================= */}
-      {/* RUTE PROTEJATE */}
-      {/* ============================= */}
-
       <Route
         path="/dashboard"
         element={
