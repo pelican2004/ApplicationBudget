@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
-
 import {
   Box,
   Typography,
@@ -14,7 +13,6 @@ import {
   Divider,
   Alert,
 } from "@mui/material";
-
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -22,7 +20,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 function Bills() {
   const [bills, setBills] = useState([]);
-
   const [form, setForm] = useState({
     provider: "",
     invoiceNumber: "",
@@ -31,22 +28,17 @@ function Bills() {
     dueDate: "",
     description: "",
   });
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-
   const [aiMessage, setAiMessage] = useState("");
   const [aiSuccess, setAiSuccess] = useState(false);
   const loadBills = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-
       if (!user?._id) {
         return;
       }
-
       const res = await api.get(`/bill/${user._id}`);
-
       setBills(res.data.bills || []);
     } catch (error) {
       console.error(
@@ -55,7 +47,6 @@ function Bills() {
       );
     }
   };
-
   useEffect(() => {
     loadBills();
   }, []);
@@ -67,26 +58,22 @@ function Bills() {
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
     if (!file) {
       setSelectedFile(null);
       return;
     }
-
     if (file.type !== "application/pdf") {
       alert("Te rog să selectezi un fișier PDF.");
       e.target.value = "";
       setSelectedFile(null);
       return;
     }
-
     if (file.size > 10 * 1024 * 1024) {
       alert("PDF-ul nu poate avea mai mult de 10 MB.");
       e.target.value = "";
       setSelectedFile(null);
       return;
     }
-
     setSelectedFile(file);
     setAiMessage("");
     setAiSuccess(false);
@@ -96,28 +83,21 @@ function Bills() {
       alert("Selectează mai întâi o factură PDF.");
       return;
     }
-
     try {
       setUploading(true);
       setAiMessage("");
       setAiSuccess(false);
-
       const formData = new FormData();
-
       formData.append("file", selectedFile);
-
       const res = await api.post(
         "/bill/analyze",
         formData
       );
-
       console.log(
         "Răspuns AI:",
         res.data
       );
-
       const invoice = res.data.invoice;
-
       if (!invoice) {
         throw new Error(
           "AI-ul nu a returnat datele facturii."
@@ -141,9 +121,7 @@ function Bills() {
             ? `Factura nr. ${invoice.invoiceNumber}`
             : "Factură analizată automat cu AI",
       });
-
       setAiSuccess(true);
-
       setAiMessage(
         "Factura a fost analizată cu succes! Verifică datele înainte de salvare."
       );
@@ -152,9 +130,7 @@ function Bills() {
         "Eroare la analiza facturii:",
         error
       );
-
       setAiSuccess(false);
-
       setAiMessage(
         error.response?.data?.message ||
           error.message ||
@@ -189,9 +165,7 @@ function Bills() {
         dueDate: form.dueDate,
         description: form.description,
       });
-  
       alert(res.data.message);
-  
       setForm({
         provider: "",
         invoiceNumber: "",
@@ -200,18 +174,15 @@ function Bills() {
         dueDate: "",
         description: "",
       });
-  
       setSelectedFile(null);
       setAiMessage("");
       setAiSuccess(false);
-  
       await loadBills();
     } catch (error) {
       console.error(
         "Eroare la adăugarea facturii:",
         error
       );
-  
       alert(
         error.response?.data?.message ||
           "Eroare la adăugarea facturii."
@@ -223,13 +194,10 @@ function Bills() {
       const res = await api.put(
         `/bill/${id}/status`
       );
-
       alert(res.data.message);
-
       loadBills();
     } catch (error) {
       console.error(error);
-
       alert(
         error.response?.data?.message ||
           "Eroare la modificarea facturii."
@@ -239,11 +207,9 @@ function Bills() {
   const handleDelete = async (id) => {
     try {
       await api.delete(`/bill/${id}`);
-
       loadBills();
     } catch (error) {
       console.error(error);
-
       alert("Eroare la ștergerea facturii.");
     }
   };
