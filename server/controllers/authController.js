@@ -8,11 +8,6 @@ const Bill = require("../models/Bill");
 const Saving = require("../models/Saving");
 const SavingTransaction = require("../models/SavingTransaction");
 const jwt = require("jsonwebtoken");
-
-// =====================================================
-// REGISTER
-// =====================================================
-
 exports.register = async (req, res) => {
   try {
     const {
@@ -24,8 +19,6 @@ exports.register = async (req, res) => {
       email,
       password,
     } = req.body;
-
-    // Verificăm câmpurile obligatorii
     if (
       !firstName ||
       !lastName ||
@@ -40,16 +33,12 @@ exports.register = async (req, res) => {
         message: "Completează toate câmpurile obligatorii.",
       });
     }
-
-    // Validare email
     if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Adresa de email nu este validă.",
       });
     }
-
-    // Validare telefon
     const phoneRegex = /^[0-9+\s()-]{8,20}$/;
 
     if (!phoneRegex.test(phone)) {
@@ -58,8 +47,6 @@ exports.register = async (req, res) => {
         message: "Numărul de telefon nu este valid.",
       });
     }
-
-    // Validare parolă
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
@@ -67,8 +54,6 @@ exports.register = async (req, res) => {
           "Parola trebuie să aibă minimum 6 caractere.",
       });
     }
-
-    // Verificăm dacă există emailul
     const existingEmail = await User.findOne({
       email: email.toLowerCase(),
     });
@@ -79,8 +64,6 @@ exports.register = async (req, res) => {
         message: "Există deja un cont cu acest email.",
       });
     }
-
-    // Verificăm dacă există telefonul
     const existingPhone = await User.findOne({
       phone,
     });
@@ -92,8 +75,6 @@ exports.register = async (req, res) => {
           "Există deja un cont cu acest număr de telefon.",
       });
     }
-
-    // Generăm cod de 6 cifre
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
@@ -102,14 +83,10 @@ exports.register = async (req, res) => {
     const verificationCodeExpire = new Date(
       Date.now() + 10 * 60 * 1000
     );
-
-    // Criptăm parola
     const hashedPassword = await bcrypt.hash(
       password,
       10
     );
-
-    // Creăm utilizatorul
     const user = await User.create({
       firstName,
       lastName,
@@ -124,10 +101,6 @@ exports.register = async (req, res) => {
       verificationCode,
       verificationCodeExpire,
     });
-
-    // =====================================================
-    // TRIMITEM CODUL PE EMAIL
-    // =====================================================
 
     try {
       await transporter.sendMail({
@@ -204,9 +177,6 @@ exports.register = async (req, res) => {
         "Eroare la trimiterea emailului:",
         emailError
       );
-
-      // Dacă emailul nu poate fi trimis,
-      // ștergem contul creat pentru a putea încerca din nou
       await User.findByIdAndDelete(user._id);
 
       return res.status(500).json({
@@ -238,11 +208,6 @@ exports.register = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// VERIFICARE EMAIL
-// =====================================================
-
 exports.verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -325,9 +290,6 @@ exports.verifyEmail = async (req, res) => {
     });
   }
 };
-// =====================================================
-// RETRIMITE CODUL DE VERIFICARE
-// =====================================================
 
 exports.resendVerificationCode = async (req, res) => {
   try {
@@ -357,21 +319,15 @@ exports.resendVerificationCode = async (req, res) => {
         message: "Adresa de email este deja verificată.",
       });
     }
-
-    // Generăm un cod nou
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-
-    // Noul cod expiră în 10 minute
     user.verificationCode = verificationCode;
     user.verificationCodeExpire = new Date(
       Date.now() + 10 * 60 * 1000
     );
 
     await user.save();
-
-    // Trimitem noul cod
     await transporter.sendMail({
       from: `"Application Budget" <${process.env.EMAIL_FROM}>`,
       to: user.email,
@@ -448,31 +404,22 @@ exports.resendVerificationCode = async (req, res) => {
     });
   }
 };
-// =====================================================
-// AI UITAT PAROLA - TRIMITE COD PE EMAIL
-// =====================================================
 
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-
-    // Verificăm dacă emailul a fost introdus
     if (!email) {
       return res.status(400).json({
         success: false,
         message: "Adresa de email este obligatorie.",
       });
     }
-
-    // Verificăm formatul emailului
     if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Adresa de email nu este validă.",
       });
     }
-
-    // Căutăm utilizatorul
     const user = await User.findOne({
       email: email.toLowerCase(),
     });
@@ -484,23 +431,15 @@ exports.forgotPassword = async (req, res) => {
           "Nu există niciun cont asociat acestei adrese de email.",
       });
     }
-
-    // Generăm cod de 6 cifre
     const resetCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-
-    // Salvăm codul
     user.resetPasswordCode = resetCode;
-
-    // Codul expiră în 10 minute
     user.resetPasswordCodeExpire = new Date(
       Date.now() + 10 * 60 * 1000
     );
 
     await user.save();
-
-    // Trimitem codul prin email
     try {
       await transporter.sendMail({
         from: `"Application Budget" <${process.env.EMAIL_FROM}>`,
@@ -585,9 +524,6 @@ exports.forgotPassword = async (req, res) => {
         "Eroare la trimiterea codului de resetare:",
         emailError
       );
-
-      // Dacă emailul nu s-a trimis,
-      // eliminăm codul salvat.
       user.resetPasswordCode = null;
       user.resetPasswordCodeExpire = null;
 
@@ -617,10 +553,6 @@ exports.forgotPassword = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// LOGIN
-// =====================================================
 
 exports.login = async (req, res) => {
   try {
@@ -685,10 +617,6 @@ exports.login = async (req, res) => {
       }
       
     );
-    
-    // =====================================================
-// EMAIL ALERTĂ AUTENTIFICARE
-// =====================================================
 
 try {
   const loginDate = new Date().toLocaleString("ro-RO", {
@@ -762,10 +690,6 @@ try {
     "Emailul de alertă login nu a putut fi trimis:",
     emailError
   );
-
-  // IMPORTANT:
-  // nu blocăm autentificarea dacă emailul
-  // de avertizare nu poate fi trimis.
 }
 
     return res.json({
@@ -793,9 +717,6 @@ try {
     });
   }
 };
-// =====================================================
-// VERIFICĂ CODUL PENTRU RESETAREA PAROLEI
-// =====================================================
 
 exports.verifyResetCode = async (req, res) => {
   try {
@@ -857,13 +778,6 @@ exports.verifyResetCode = async (req, res) => {
       });
     }
     };
-    
-    // =====================================================
-    // CONFIRMĂ ȘI ȘTERGE CONTUL
-    // =====================================================
-// =====================================================
-// CONFIRMĂ ȘI ȘTERGE CONTUL
-// =====================================================
 
 exports.confirmDeleteAccount = async (req, res) => {
   try {
@@ -887,8 +801,6 @@ exports.confirmDeleteAccount = async (req, res) => {
         message: "Utilizatorul nu a fost găsit.",
       });
     }
-
-    // Verificăm codul
     if (
       !user.deleteAccountCode ||
       user.deleteAccountCode !== String(code)
@@ -899,8 +811,6 @@ exports.confirmDeleteAccount = async (req, res) => {
           "Codul pentru ștergerea contului este incorect.",
       });
     }
-
-    // Verificăm expirarea
     if (
       !user.deleteAccountCodeExpire ||
       user.deleteAccountCodeExpire < new Date()
@@ -912,10 +822,6 @@ exports.confirmDeleteAccount = async (req, res) => {
       });
     }
 
-    // =====================================================
-    // GĂSIM ECONOMIILE UTILIZATORULUI
-    // =====================================================
-
     const savings = await Saving.find({
       user: user._id,
     }).select("_id");
@@ -923,11 +829,6 @@ exports.confirmDeleteAccount = async (req, res) => {
     const savingIds = savings.map(
       (saving) => saving._id
     );
-
-    // =====================================================
-    // ȘTERGEM TRANZACȚIILE ECONOMIILOR
-    // =====================================================
-
     if (savingIds.length > 0) {
       await SavingTransaction.deleteMany({
         saving: {
@@ -935,11 +836,6 @@ exports.confirmDeleteAccount = async (req, res) => {
         },
       });
     }
-
-    // =====================================================
-// ȘTERGEM RESTUL DATELOR
-// =====================================================
-
 await Promise.all([
   Income.deleteMany({
     user: user._id,
@@ -957,11 +853,6 @@ await Promise.all([
     user: user._id,
   }),
 ]);
-
-// =====================================================
-// ȘTERGEM UTILIZATORUL
-// =====================================================
-
 await User.findByIdAndDelete(user._id);
 
 return res.json({
@@ -984,12 +875,6 @@ return res.json({
   });
 }
 };
-
-
-// =====================================================
-// ACTUALIZARE PROFIL
-// =====================================================
-
 exports.updateProfile = async (req, res) => {
   try {
     const {
@@ -1034,9 +919,6 @@ exports.updateProfile = async (req, res) => {
           "Utilizatorul nu a fost găsit.",
       });
     }
-
-    // Verificăm dacă telefonul este folosit
-    // de alt utilizator
     const existingPhone = await User.findOne({
       phone: phone.trim(),
 
@@ -1093,10 +975,6 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
-//==========================================
-// SOLICITĂ ȘTERGEREA CONTULUI
-// =====================================================
-
 exports.requestDeleteAccount = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -1116,13 +994,9 @@ exports.requestDeleteAccount = async (req, res) => {
         message: "Utilizatorul nu a fost găsit.",
       });
     }
-
-    // Cod de 6 cifre
     const deleteCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-
-    // Cod valabil 10 minute
     user.deleteAccountCode = deleteCode;
 
     user.deleteAccountCodeExpire = new Date(
@@ -1242,10 +1116,6 @@ exports.requestDeleteAccount = async (req, res) => {
     });
   }
 };
-// =====================================================
-// RESETARE PAROLĂ
-// =====================================================
-
 exports.resetPassword = async (req, res) => {
   try {
     const { email, code, newPassword } = req.body;
@@ -1275,8 +1145,6 @@ exports.resetPassword = async (req, res) => {
         message: "Utilizatorul nu a fost găsit.",
       });
     }
-
-    // Verificăm din nou codul
     if (
       !user.resetPasswordCode ||
       user.resetPasswordCode !== String(code)
@@ -1287,8 +1155,6 @@ exports.resetPassword = async (req, res) => {
           "Codul pentru resetarea parolei nu este valid.",
       });
     }
-
-    // Verificăm dacă a expirat
     if (
       !user.resetPasswordCodeExpire ||
       user.resetPasswordCodeExpire < new Date()
@@ -1299,23 +1165,14 @@ exports.resetPassword = async (req, res) => {
           "Codul pentru resetarea parolei a expirat.",
       });
     }
-
-    // Criptăm parola nouă
     user.password = await bcrypt.hash(
       newPassword,
       10
     );
-
-    // Codul nu mai poate fi folosit
     user.resetPasswordCode = null;
     user.resetPasswordCodeExpire = null;
 
     await user.save();
-
-    // =================================================
-    // EMAIL DE SECURITATE
-    // =================================================
-
     try {
       await transporter.sendMail({
         from: `"Application Budget" <${process.env.EMAIL_FROM}>`,
@@ -1370,9 +1227,6 @@ exports.resetPassword = async (req, res) => {
         "Email confirmare resetare parolă:",
         emailError
       );
-
-      // Parola rămâne schimbată chiar dacă
-      // emailul de securitate nu poate fi trimis.
     }
 
     return res.json({
