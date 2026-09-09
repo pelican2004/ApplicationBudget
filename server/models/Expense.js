@@ -7,12 +7,10 @@ const expenseSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     amount: {
       type: Number,
       required: [true, "Suma este obligatorie"],
     },
-
     category: {
       type: String,
       required: [true, "Categoria este obligatorie"],
@@ -21,25 +19,19 @@ const expenseSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-
     description: {
       type: String,
       default: "",
     },
-
     date: {
       type: Date,
       default: Date.now,
     },
-
-    // Depunerea de economii care a generat această cheltuială
     savingTransaction: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SavingTransaction",
       default: null,
     },
-
-    // Factura care a generat această cheltuială
     bill: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Bill",
