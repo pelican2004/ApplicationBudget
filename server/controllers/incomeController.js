@@ -1,9 +1,5 @@
 const Income = require("../models/Income");
 
-// =====================================================
-// ADAUGĂ VENIT
-// =====================================================
-
 exports.createIncome = async (req, res) => {
   try {
     const {
@@ -12,9 +8,6 @@ exports.createIncome = async (req, res) => {
       description,
       date,
     } = req.body;
-
-    // Utilizatorul vine din JWT,
-    // nu din req.body
     const userId = req.user._id;
 
     if (!amount || !category) {
@@ -52,16 +45,8 @@ exports.createIncome = async (req, res) => {
     });
   }
 };
-
-
-// =====================================================
-// VENITURILE UTILIZATORULUI AUTENTIFICAT
-// =====================================================
-
 exports.getIncomes = async (req, res) => {
   try {
-    // Ignorăm req.params.user.
-    // Folosim utilizatorul autentificat.
     const userId = req.user._id;
 
     const incomes = await Income.find({
@@ -69,7 +54,6 @@ exports.getIncomes = async (req, res) => {
     }).sort({
       date: -1,
     });
-
     return res.json({
       success: true,
       incomes,
@@ -79,7 +63,6 @@ exports.getIncomes = async (req, res) => {
       "Eroare getIncomes:",
       error
     );
-
     return res.status(500).json({
       success: false,
       message:
@@ -87,12 +70,6 @@ exports.getIncomes = async (req, res) => {
     });
   }
 };
-
-
-// =====================================================
-// ȘTERGE VENIT
-// =====================================================
-
 exports.deleteIncome = async (req, res) => {
   try {
     const userId = req.user._id;
