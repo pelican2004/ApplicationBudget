@@ -4,8 +4,6 @@ import Sidebar from "../components/layout/Sidebar";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import SavingsIcon from "@mui/icons-material/Savings";
-//import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 import {
   Box,
   Typography,
@@ -45,11 +43,6 @@ function Savings() {
       [e.target.name]: e.target.value,
     });
   };
-
-  // ==========================================
-  // ÎNCĂRCARE OBIECTIVE + ISTORIC
-  // ==========================================
-
   const loadSavings = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -82,11 +75,6 @@ function Savings() {
   useEffect(() => {
     loadSavings();
   }, []);
-
-  // ==========================================
-  // CREARE OBIECTIV
-  // ==========================================
-
   const handleSubmit = async () => {
     try {
       if (!form.title.trim()) {
@@ -128,11 +116,6 @@ function Savings() {
       );
     }
   };
-
-  // ==========================================
-  // ȘTERGERE OBIECTIV
-  // ==========================================
-
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Sigur vrei să ștergi acest obiectiv?"
@@ -152,11 +135,6 @@ function Savings() {
       alert("Eroare la ștergerea obiectivului.");
     }
   };
-
-  // ==========================================
-  // DESCHIDERE DIALOG ADAUGARE BANI
-  // ==========================================
-
   const handleOpenDialog = (saving) => {
     const savingTransactions =
       transactions[saving._id] || [];
@@ -166,9 +144,6 @@ function Savings() {
         sum + Number(transaction.amount),
       0
     );
-
-    // Dacă obiectivul este deja atins,
-    // nu permitem deschiderea dialogului.
     if (savedAmount >= Number(saving.targetAmount)) {
       alert("Acest obiectiv a fost deja atins.");
       return;
@@ -178,11 +153,6 @@ function Savings() {
     setAmount("");
     setOpenDialog(true);
   };
-
-  // ==========================================
-  // ADAUGARE BANI
-  // ==========================================
-
   const handleAddMoney = async () => {
     try {
       if (!selectedSaving) {
@@ -208,8 +178,6 @@ function Savings() {
       const remaining =
         Number(selectedSaving.targetAmount) -
         savedAmount;
-
-      // Obiectiv deja atins
       if (remaining <= 0) {
         alert("Acest obiectiv a fost deja atins.");
         setOpenDialog(false);
@@ -243,11 +211,6 @@ function Savings() {
       );
     }
   };
-
-  // ==========================================
-  // CULOARE PROGRES
-  // ==========================================
-
   const getProgressColor = (progress) => {
     if (progress < 40) {
       return "error";
@@ -259,11 +222,6 @@ function Savings() {
 
     return "success";
   };
-
-  // ==========================================
-  // RENDER
-  // ==========================================
-
   return (
     <>
       <Sidebar />
@@ -281,8 +239,6 @@ function Savings() {
     },
   }}
 >
-        {/* TITLU */}
-
         <Typography
   variant="h4"
   gutterBottom
@@ -300,11 +256,6 @@ function Savings() {
   <SavingsIcon />
   Economii
 </Typography>
-
-{/* ======================================
-    FORMULAR OBIECTIV
-====================================== */}
-
 <Card sx={{ mb: 4 }}>
   <CardContent
     sx={{
@@ -379,11 +330,6 @@ function Savings() {
             </Button>
           </CardContent>
         </Card>
-
-        {/* ======================================
-            LISTA OBIECTIVE
-        ====================================== */}
-
         <Typography
           variant="h5"
           sx={{ mb: 2 }}
@@ -401,8 +347,6 @@ function Savings() {
             savings.map((saving) => {
               const savingTransactions =
                 transactions[saving._id] || [];
-
-              // Total economisit
               const savedAmount =
                 savingTransactions.reduce(
                   (sum, transaction) =>
@@ -413,14 +357,10 @@ function Savings() {
 
               const targetAmount =
                 Number(saving.targetAmount);
-
-              // Ce mai trebuie economisit
               const remaining = Math.max(
                 targetAmount - savedAmount,
                 0
               );
-
-              // Procent
               const progress =
                 targetAmount > 0
                   ? Math.min(
@@ -452,8 +392,6 @@ function Savings() {
     },
   }}
 >
-                    {/* TITLU */}
-
                     <Typography
                       variant="h6"
                       sx={{
@@ -462,8 +400,6 @@ function Savings() {
                     >
                       🎯 {saving.title}
                     </Typography>
-
-                    {/* PROGRES */}
 
                     <Chip
                       label={`${progress}%`}
@@ -488,9 +424,6 @@ function Savings() {
                         mb: 3,
                       }}
                     />
-
-                    {/* SUME */}
-
                     <Typography>
                       <strong>
                         Economisit:
@@ -532,11 +465,6 @@ function Savings() {
                           )
                         : "Fără termen"}
                     </Typography>
-
-                    {/* =================================
-                        OBIECTIV ATINS
-                    ================================= */}
-
                     {isCompleted && (
                       <Alert
                         severity="success"
@@ -548,11 +476,6 @@ function Savings() {
                         acestui obiectiv.
                       </Alert>
                     )}
-
-                    {/* =================================
-                        BUTON ADAUGĂ BANI
-                    ================================= */}
-
 <Button
   variant="outlined"
   sx={{
@@ -570,11 +493,6 @@ function Savings() {
 >
   Adaugă bani
 </Button>
-
-                    {/* =================================
-                        ȘTERGERE
-                    ================================= */}
-
                    <Button
   color="error"
   variant="contained"
@@ -596,11 +514,6 @@ function Savings() {
                     <Divider
                       sx={{ my: 3 }}
                     />
-
-                    {/* =================================
-                        ISTORIC DEPUNERI
-                    ================================= */}
-
                     <Typography
                       variant="h6"
                       sx={{
@@ -687,11 +600,6 @@ function Savings() {
           )}
         </Stack>
       </Box>
-
-      {/* ==========================================
-          DIALOG ADAUGĂ BANI
-      ========================================== */}
-
       <Dialog
         open={openDialog}
         onClose={() =>
