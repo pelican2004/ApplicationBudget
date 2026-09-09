@@ -4,18 +4,10 @@ const SavingTransaction = require(
 const Saving = require("../models/Saving");
 const Income = require("../models/Income");
 const Expense = require("../models/Expense");
-
-// =====================================================
-// ADAUGĂ BANI ÎNTR-UN OBIECTIV DE ECONOMII
-// =====================================================
-
 exports.createTransaction = async (req, res) => {
   try {
     const { saving, amount } = req.body;
-
     const userId = req.user._id;
-
-    // Verificăm suma introdusă
     const requestedAmount = Number(amount);
 
     if (
@@ -28,9 +20,6 @@ exports.createTransaction = async (req, res) => {
           "Suma trebuie să fie mai mare decât 0.",
       });
     }
-
-    // Căutăm obiectivul DOAR dacă aparține
-    // utilizatorului autentificat
     const savingGoal = await Saving.findOne({
       _id: saving,
       user: userId,
@@ -43,8 +32,6 @@ exports.createTransaction = async (req, res) => {
           "Obiectivul de economii nu a fost găsit sau nu îți aparține.",
       });
     }
-
-    // Calculăm cât s-a economisit deja
     const transactions =
       await SavingTransaction.find({
         saving: savingGoal._id,
@@ -55,8 +42,6 @@ exports.createTransaction = async (req, res) => {
         sum + Number(transaction.amount || 0),
       0
     );
-
-    // Verificăm dacă obiectivul este deja atins
     if (
       savedAmount >=
       Number(savingGoal.targetAmount)
@@ -67,52 +52,30 @@ exports.createTransaction = async (req, res) => {
           "Acest obiectiv a fost deja atins. Nu mai poți adăuga bani.",
       });
     }
-
     const remainingAmount =
       Number(savingGoal.targetAmount) -
       savedAmount;
-
     const amountForSaving = Math.min(
       requestedAmount,
       remainingAmount
     );
-
     const surplus =
       requestedAmount - amountForSaving;
-
-    // =====================================================
-    // CREĂM TRANZACȚIA
-    // =====================================================
-
     const transaction =
       await SavingTransaction.create({
         saving: savingGoal._id,
         amount: amountForSaving,
       });
-
-    // =====================================================
-    // CREĂM CHELTUIALA
-    // =====================================================
-
     const expense = await Expense.create({
-      // folosim utilizatorul autentificat
       user: userId,
-
       amount: amountForSaving,
       category: "Economii",
       description:
         `Depunere pentru obiectivul "${savingGoal.title}"`,
       date: new Date(),
-
       savingTransaction: transaction._id,
     });
-
-    // =====================================================
-    // SURPLUSUL SE ÎNTOARCE ÎN VENITURI
-    // =====================================================
-
     let income = null;
-
     if (surplus > 0) {
       income = await Income.create({
         user: userId,
@@ -123,24 +86,12 @@ exports.createTransaction = async (req, res) => {
         date: new Date(),
       });
     }
-
-    // =====================================================
-    // VERIFICĂM DACĂ OBIECTIVUL A FOST ATINS
-    // =====================================================
-
     const newSavedAmount =
       savedAmount + amountForSaving;
-
     const goalCompleted =
       newSavedAmount >=
       Number(savingGoal.targetAmount);
-
-    // =====================================================
-    // MESAJ
-    // =====================================================
-
     let message;
-
     if (surplus > 0) {
       message =
         `Au fost adăugați ${amountForSaving} lei în obiectiv. ` +
@@ -184,17 +135,9 @@ exports.createTransaction = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// ISTORICUL DEPUNERILOR
-// =====================================================
-
 exports.getTransactions = async (req, res) => {
   try {
     const userId = req.user._id;
-
-    // Verificăm mai întâi dacă obiectivul
-    // aparține utilizatorului autentificat
     const savingGoal = await Saving.findOne({
       _id: req.params.saving,
       user: userId,
@@ -232,24 +175,16 @@ exports.getTransactions = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// ȘTERGE O DEPUNERE
-// =====================================================
-
 exports.deleteTransaction = async (
   req,
   res
 ) => {
   try {
     const userId = req.user._id;
-
-    // Găsim tranzacția
     const transaction =
       await SavingTransaction.findById(
         req.params.id
       );
-
     if (!transaction) {
       return res.status(404).json({
         success: false,
@@ -257,9 +192,6 @@ exports.deleteTransaction = async (
           "Depunerea nu a fost găsită.",
       });
     }
-
-    // Verificăm cui îi aparține obiectivul
-    // asociat tranzacției
     const savingGoal = await Saving.findOne({
       _id: transaction.saving,
       user: userId,
@@ -272,15 +204,10 @@ exports.deleteTransaction = async (
           "Nu ai permisiunea să ștergi această depunere.",
       });
     }
-
-    // Ștergem doar cheltuiala asociată
-    // aceluiași utilizator
     await Expense.findOneAndDelete({
       savingTransaction: transaction._id,
       user: userId,
     });
-
-    // Ștergem tranzacția
     await SavingTransaction.findByIdAndDelete(
       transaction._id
     );
