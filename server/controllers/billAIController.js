@@ -17,8 +17,6 @@ const analyzeBill = async (req, res) => {
       "Analizez factura:",
       req.file.originalname
     );
-
-    // Transformăm PDF-ul în Base64
     const base64PDF = req.file.buffer.toString("base64");
 
     const response = await openai.responses.create({
@@ -76,8 +74,6 @@ Reguli:
       "Răspuns AI:",
       aiText
     );
-
-    // Eliminăm eventualele ```json ... ```
     const cleanedText = aiText
       .replace(/```json/g, "")
       .replace(/```/g, "")
