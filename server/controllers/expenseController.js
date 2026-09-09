@@ -1,9 +1,5 @@
 const Expense = require("../models/Expense");
 
-// =====================================================
-// ADAUGĂ CHELTUIALĂ
-// =====================================================
-
 exports.createExpense = async (req, res) => {
   try {
     const {
@@ -13,7 +9,6 @@ exports.createExpense = async (req, res) => {
       description,
       date,
     } = req.body;
-    // Utilizatorul vine din JWT
     const userId = req.user._id;
 
     if (!amount || !category) {
@@ -53,10 +48,6 @@ exports.createExpense = async (req, res) => {
   }
 };
 
-// =====================================================
-// CHELTUIELILE UTILIZATORULUI AUTENTIFICAT
-// =====================================================
-
 exports.getExpenses = async (req, res) => {
   try {
     // Ignorăm req.params.user
@@ -86,11 +77,6 @@ exports.getExpenses = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// ȘTERGE CHELTUIALĂ
-// =====================================================
-
 exports.deleteExpense = async (req, res) => {
   try {
     const userId = req.user._id;
