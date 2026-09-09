@@ -10,14 +10,12 @@ const startBillReminderJob = () => {
   console.log(
     "⏰ Sistemul de reminder pentru facturi este activ."
   );
-
   cron.schedule(
     "0 9 * * *",
     async () => {
       console.log(
         "🔎 Verific facturile apropiate de scadență..."
       );
-
       await checkBillReminders();
     }
   );
