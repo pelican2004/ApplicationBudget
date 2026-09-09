@@ -101,9 +101,6 @@ function Dashboard() {
             sum + Number(bill.amount || 0),
           0
         );
-
-        // Facturile neachitate care urmează să ajungă
-        // la termen în următoarele 7 zile
         const today = new Date();
 
         const nextWeek = new Date();
@@ -316,10 +313,6 @@ function Dashboard() {
     minHeight: "100vh",
   }}
 >
-        {/* ================================= */}
-        {/* TITLU */}
-        {/* ================================= */}
-
         <Typography
   variant="h3"
   sx={{
@@ -348,11 +341,6 @@ function Dashboard() {
         >
           Iată situația finanțelor tale.
         </Typography>
-
-        {/* ================================= */}
-        {/* CARDURI FINANCIARE */}
-        {/* ================================= */}
-
         <Grid
           container
           spacing={3}
@@ -390,9 +378,6 @@ function Dashboard() {
               </Typography>
             </Paper>
           </Grid>
-
-          {/* VENITURI */}
-
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper
               elevation={4}
@@ -426,9 +411,6 @@ function Dashboard() {
               </Typography>
             </Paper>
           </Grid>
-
-          {/* CHELTUIELI */}
-
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper
               elevation={4}
@@ -463,11 +445,6 @@ function Dashboard() {
             </Paper>
           </Grid>
         </Grid>
-
-        {/* ================================= */}
-        {/* FACTURI + ECONOMII */}
-        {/* ================================= */}
-
         <Grid
           container
           spacing={3}
@@ -550,9 +527,6 @@ function Dashboard() {
               </Button>
             </Paper>
           </Grid>
-
-          {/* ECONOMII */}
-
           <Grid size={{ xs: 12, md: 6 }}>
             <Paper
               elevation={3}
@@ -633,11 +607,6 @@ function Dashboard() {
             </Paper>
           </Grid>
         </Grid>
-
-        {/* ================================= */}
-        {/* FACTURI APROPIATE DE SCADENȚĂ */}
-        {/* ================================= */}
-
         <Paper
           elevation={3}
           sx={{
@@ -718,11 +687,6 @@ function Dashboard() {
             </Stack>
           )}
         </Paper>
-
-        {/* ================================= */}
-        {/* OBIECTIVE ECONOMII */}
-        {/* ================================= */}
-
         <Paper
           elevation={3}
           sx={{
@@ -853,11 +817,6 @@ function Dashboard() {
             </Stack>
           )}
         </Paper>
-
-        {/* ================================= */}
-        {/* GRAFIC */}
-        {/* ================================= */}
-
         <Paper
   elevation={3}
   sx={{
@@ -913,11 +872,6 @@ function Dashboard() {
             </BarChart>
           </ResponsiveContainer>
         </Paper>
-
-        {/* ================================= */}
-        {/* ULTIMELE TRANZACȚII */}
-        {/* ================================= */}
-
         <Paper
           elevation={3}
           sx={{
