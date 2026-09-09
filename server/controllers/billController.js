@@ -1,10 +1,5 @@
 const Bill = require("../models/Bill");
 const Expense = require("../models/Expense");
-
-// =====================================================
-// ADAUGĂ FACTURĂ
-// =====================================================
-
 exports.createBill = async (req, res) => {
   try {
     const {
@@ -56,10 +51,6 @@ exports.createBill = async (req, res) => {
   }
 };
 
-// =====================================================
-// OBȚINE FACTURILE UTILIZATORULUI
-// =====================================================
-
 exports.getBills = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -88,10 +79,6 @@ exports.getBills = async (req, res) => {
   }
 };
 
-// =====================================================
-// MARCHEAZĂ FACTURA CA PLĂTITĂ / NEPLĂTITĂ
-// =====================================================
-
 exports.toggleBillStatus = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -108,15 +95,10 @@ exports.toggleBillStatus = async (req, res) => {
           "Factura nu a fost găsită sau nu îți aparține.",
       });
     }
-
-    // Dacă factura este plătită,
-    // o marcăm ca neplătită.
     if (bill.status === "paid") {
       bill.status = "unpaid";
 
       await bill.save();
-
-      // Ștergem cheltuiala asociată facturii.
       await Expense.findOneAndDelete({
         bill: bill._id,
         user: userId,
@@ -129,13 +111,9 @@ exports.toggleBillStatus = async (req, res) => {
         bill,
       });
     }
-
-    // Factura este neplătită -> o marcăm plătită.
     bill.status = "paid";
 
     await bill.save();
-
-    // Verificăm dacă există deja cheltuiala.
     const existingExpense =
       await Expense.findOne({
         bill: bill._id,
@@ -143,8 +121,6 @@ exports.toggleBillStatus = async (req, res) => {
       });
 
     let expense = existingExpense;
-
-    // Dacă nu există, o creăm.
     if (!expense) {
       expense = await Expense.create({
         user: userId,
@@ -177,11 +153,6 @@ exports.toggleBillStatus = async (req, res) => {
     });
   }
 };
-
-// =====================================================
-// ȘTERGE FACTURA
-// =====================================================
-
 exports.deleteBill = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -198,14 +169,10 @@ exports.deleteBill = async (req, res) => {
           "Factura nu a fost găsită sau nu îți aparține.",
       });
     }
-
-    // Ștergem cheltuiala asociată facturii.
     await Expense.findOneAndDelete({
       bill: bill._id,
       user: userId,
     });
-
-    // Ștergem factura.
     await Bill.findByIdAndDelete(
       bill._id
     );
