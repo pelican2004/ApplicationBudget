@@ -31,11 +31,6 @@ function Profile() {
       ? JSON.parse(savedUser)
       : null;
   });
-
-  // ==========================================
-  // EDITARE PROFIL
-  // ==========================================
-
   const [isEditing, setIsEditing] =
     useState(false);
 
@@ -60,10 +55,6 @@ function Profile() {
     gender: user?.gender || "",
   });
 
-  // ==========================================
-  // ȘTERGERE CONT
-  // ==========================================
-
   const [deleteDialogOpen, setDeleteDialogOpen] =
     useState(false);
 
@@ -81,22 +72,12 @@ function Profile() {
 
   const [loading, setLoading] =
     useState(false);
-
-  // ==========================================
-  // MODIFICARE CÂMPURI PROFIL
-  // ==========================================
-
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
-
-  // ==========================================
-  // ACTIVEAZĂ EDITAREA
-  // ==========================================
-
   const handleEdit = () => {
     setProfileError("");
     setProfileMessage("");
@@ -115,11 +96,6 @@ function Profile() {
 
     setIsEditing(true);
   };
-
-  // ==========================================
-  // ANULEAZĂ EDITAREA
-  // ==========================================
-
   const handleCancelEdit = () => {
     setForm({
       firstName: user.firstName || "",
@@ -137,11 +113,6 @@ function Profile() {
     setProfileMessage("");
     setIsEditing(false);
   };
-
-  // ==========================================
-  // SALVEAZĂ PROFILUL
-  // ==========================================
-
   const handleSaveProfile = async () => {
     if (
       !form.firstName.trim() ||
@@ -227,11 +198,6 @@ function Profile() {
       setProfileLoading(false);
     }
   };
-
-  // ==========================================
-  // SOLICITĂ CODUL PENTRU ȘTERGERE
-  // ==========================================
-
   const handleRequestDelete = async () => {
     try {
       setLoading(true);
@@ -263,11 +229,6 @@ function Profile() {
       setLoading(false);
     }
   };
-
-  // ==========================================
-  // CONFIRMĂ ȘTERGEREA CONTULUI
-  // ==========================================
-
   const handleConfirmDelete = async () => {
     if (!/^\d{6}$/.test(deleteCode)) {
       setError(
@@ -308,11 +269,6 @@ function Profile() {
       setLoading(false);
     }
   };
-
-  // ==========================================
-  // FORMATARE DATĂ NAȘTERE
-  // ==========================================
-
   const formatBirthDate = (date) => {
     if (!date) {
       return "-";
@@ -322,11 +278,6 @@ function Profile() {
       date
     ).toLocaleDateString("ro-RO");
   };
-
-  // ==========================================
-  // SEX
-  // ==========================================
-
   const formatGender = (gender) => {
     if (gender === "female") {
       return "Feminin";
