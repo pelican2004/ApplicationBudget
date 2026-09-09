@@ -37,11 +37,6 @@ function Bills() {
 
   const [aiMessage, setAiMessage] = useState("");
   const [aiSuccess, setAiSuccess] = useState(false);
-
-  // =====================================================
-  // ÎNCARCĂ FACTURILE
-  // =====================================================
-
   const loadBills = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -64,22 +59,12 @@ function Bills() {
   useEffect(() => {
     loadBills();
   }, []);
-
-  // =====================================================
-  // MODIFICĂ FORMULARUL
-  // =====================================================
-
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
-
-  // =====================================================
-  // SELECTEAZĂ PDF
-  // =====================================================
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -106,11 +91,6 @@ function Bills() {
     setAiMessage("");
     setAiSuccess(false);
   };
-
-  // =====================================================
-  // ANALIZEAZĂ PDF CU AI
-  // =====================================================
-
   const handleAnalyzePDF = async () => {
     if (!selectedFile) {
       alert("Selectează mai întâi o factură PDF.");
@@ -143,11 +123,6 @@ function Bills() {
           "AI-ul nu a returnat datele facturii."
         );
       }
-
-      // ================================================
-      // COMPLETĂM AUTOMAT FORMULARUL
-      // ================================================
-
       setForm({
         provider: invoice.provider || "",
         invoiceNumber:
@@ -189,11 +164,6 @@ function Bills() {
       setUploading(false);
     }
   };
-
-  // =====================================================
-  // ADAUGĂ FACTURA
-  // =====================================================
-
   const handleSubmit = async () => {
     try {
       if (!form.provider) {
@@ -248,10 +218,6 @@ function Bills() {
       );
     }
   };
-  // =====================================================
-  // MARCHEAZĂ FACTURA PLĂTITĂ
-  // =====================================================
-
   const handleToggleStatus = async (id) => {
     try {
       const res = await api.put(
@@ -270,11 +236,6 @@ function Bills() {
       );
     }
   };
-
-  // =====================================================
-  // ȘTERGE FACTURA
-  // =====================================================
-
   const handleDelete = async (id) => {
     try {
       await api.delete(`/bill/${id}`);
@@ -286,11 +247,6 @@ function Bills() {
       alert("Eroare la ștergerea facturii.");
     }
   };
-
-  // =====================================================
-  // FORMAT BANI
-  // =====================================================
-
   const formatMoney = (value) => {
     return Number(value || 0).toLocaleString(
       "ro-RO",
