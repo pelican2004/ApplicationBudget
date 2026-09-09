@@ -33,7 +33,6 @@ function Register() {
   };
 
   const handleRegister = async () => {
-    // Verificăm câmpurile obligatorii
     if (
       !form.firstName ||
       !form.lastName ||
@@ -47,8 +46,6 @@ function Register() {
       alert("Completează toate câmpurile.");
       return;
     }
-
-    // Validare simplă email
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -56,8 +53,6 @@ function Register() {
       alert("Introdu o adresă de email validă.");
       return;
     }
-
-    // Validare telefon
     const phoneRegex =
       /^[0-9+\s()-]{8,20}$/;
 
@@ -65,16 +60,12 @@ function Register() {
       alert("Introdu un număr de telefon valid.");
       return;
     }
-
-    // Verificăm parola
     if (form.password.length < 6) {
       alert(
         "Parola trebuie să aibă minimum 6 caractere."
       );
       return;
     }
-
-    // Confirmare parolă
     if (
       form.password !==
       form.confirmPassword
@@ -98,14 +89,10 @@ function Register() {
       );
 
       alert(res.data.message);
-
-      // Salvăm temporar emailul pentru pagina de verificare
       localStorage.setItem(
         "verificationEmail",
         form.email
       );
-
-      // Mergem la pagina de verificare email
       navigate("/verify-email");
     } catch (err) {
       console.error(err);
