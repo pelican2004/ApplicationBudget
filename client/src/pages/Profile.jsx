@@ -146,14 +146,10 @@ function Profile() {
       );
 
       const updatedUser = res.data.user;
-
-      // Actualizăm localStorage
       localStorage.setItem(
         "user",
         JSON.stringify(updatedUser)
       );
-
-      // Actualizăm imediat pagina
       setUser(updatedUser);
 
       setForm({
@@ -342,10 +338,6 @@ function Profile() {
           👤 Profil
         </Typography>
 
-        {/* =====================================
-            DATE PERSONALE
-        ====================================== */}
-
         <Paper
           elevation={3}
           sx={{
@@ -416,9 +408,6 @@ function Profile() {
               {profileError}
             </Alert>
           )}
-
-          {/* PRENUME */}
-
           <TextField
             fullWidth
             label="Prenume"
@@ -435,8 +424,6 @@ function Profile() {
             }}
           />
 
-          {/* NUME */}
-
           <TextField
             fullWidth
             label="Nume"
@@ -452,9 +439,6 @@ function Profile() {
               readOnly: !isEditing,
             }}
           />
-
-          {/* EMAIL - NU SE EDITEAZĂ */}
-
           <TextField
             fullWidth
             label="Email"
@@ -469,9 +453,6 @@ function Profile() {
                 : ""
             }
           />
-
-          {/* TELEFON */}
-
           <TextField
             fullWidth
             label="Telefon"
@@ -487,9 +468,6 @@ function Profile() {
               readOnly: !isEditing,
             }}
           />
-
-          {/* DATA NAȘTERII */}
-
           {isEditing ? (
             <TextField
               fullWidth
@@ -516,9 +494,6 @@ function Profile() {
               }}
             />
           )}
-
-          {/* SEX */}
-
           {isEditing ? (
             <FormControl
               fullWidth
@@ -561,9 +536,6 @@ function Profile() {
               }}
             />
           )}
-
-          {/* BUTOANE SALVARE / ANULARE */}
-
           {isEditing && (
            <Box
            sx={{
@@ -610,11 +582,6 @@ function Profile() {
             </Box>
           )}
         </Paper>
-
-        {/* =====================================
-            SECURITATE
-        ====================================== */}
-
         <Paper
           elevation={3}
           sx={{
@@ -675,10 +642,6 @@ function Profile() {
   Șterge contul
 </Button>
         </Paper>
-
-        {/* =====================================
-            CONFIRMARE ȘTERGERE
-        ====================================== */}
 
         <Dialog
           open={deleteDialogOpen}
@@ -743,11 +706,6 @@ function Profile() {
             </Button>
           </DialogActions>
         </Dialog>
-
-        {/* =====================================
-            COD ȘTERGERE
-        ====================================== */}
-
         <Dialog
           open={codeDialogOpen}
           onClose={() =>
