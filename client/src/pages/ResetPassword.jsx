@@ -72,8 +72,6 @@ function ResetPassword() {
       );
 
       alert(res.data.message);
-
-      // Ștergem datele temporare
       localStorage.removeItem(
         "resetPasswordEmail"
       );
@@ -81,8 +79,6 @@ function ResetPassword() {
       localStorage.removeItem(
         "resetPasswordCode"
       );
-
-      // Înapoi la Login
       navigate("/");
     } catch (error) {
       console.error(
