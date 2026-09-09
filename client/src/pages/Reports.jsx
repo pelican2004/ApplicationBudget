@@ -100,10 +100,6 @@ function Reports() {
       maximumFractionDigits: 2,
     });
   };
-
-  /*
-   * Filtrăm veniturile în funcție de anul și luna selectate.
-   */
   const filteredIncomes = useMemo(() => {
     return incomes.filter((income) => {
       const date = new Date(income.date);
@@ -122,10 +118,6 @@ function Reports() {
       return true;
     });
   }, [incomes, selectedYear, selectedMonth]);
-
-  /*
-   * Filtrăm cheltuielile în funcție de anul și luna selectate.
-   */
   const filteredExpenses = useMemo(() => {
     return expenses.filter((expense) => {
       const date = new Date(expense.date);
@@ -144,43 +136,23 @@ function Reports() {
       return true;
     });
   }, [expenses, selectedYear, selectedMonth]);
-
-  /*
-   * Total venituri pentru perioada selectată.
-   */
   const totalIncome = useMemo(() => {
     return filteredIncomes.reduce(
       (sum, income) => sum + Number(income.amount || 0),
       0
     );
   }, [filteredIncomes]);
-
-  /*
-   * Total cheltuieli pentru perioada selectată.
-   */
   const totalExpense = useMemo(() => {
     return filteredExpenses.reduce(
       (sum, expense) => sum + Number(expense.amount || 0),
       0
     );
   }, [filteredExpenses]);
-
-  /*
-   * Soldul perioadei.
-   */
   const balance = totalIncome - totalExpense;
-
-  /*
-   * Procentul din venituri care a fost cheltuit.
-   */
   const expensePercentage =
     totalIncome > 0
       ? Math.round((totalExpense / totalIncome) * 100)
       : 0;
-
-  /*
-   * Date pentru graficul lunar.
-   */
   const monthlyData = useMemo(() => {
     const months = [
       "Ian",
@@ -233,21 +205,12 @@ function Reports() {
       };
     });
   }, [incomes, expenses, selectedYear]);
-
-  /*
-   * Dacă este selectată o anumită lună,
-   * afișăm doar luna respectivă în grafic.
-   */
   const chartData =
     selectedMonth === "all"
       ? monthlyData
       : monthlyData.filter(
           (_, index) => index === Number(selectedMonth)
         );
-
-  /*
-   * Cheltuieli grupate pe categorii.
-   */
   const categoryData = useMemo(() => {
     const categories = {};
 
@@ -268,10 +231,6 @@ function Reports() {
       })
     );
   }, [filteredExpenses]);
-
-  /*
-   * Total economisit pentru fiecare obiectiv.
-   */
   const savingsData = useMemo(() => {
     return savings.map((saving) => {
       const savingTransactions =
@@ -305,10 +264,6 @@ function Reports() {
       };
     });
   }, [savings, transactions]);
-
-  /*
-   * Cea mai mare categorie de cheltuieli.
-   */
   const highestExpenseCategory = useMemo(() => {
     if (categoryData.length === 0) {
       return null;
@@ -318,10 +273,6 @@ function Reports() {
       current.value > max.value ? current : max
     );
   }, [categoryData]);
-
-  /*
-   * Totalul tuturor economiilor.
-   */
   const totalSaved = savingsData.reduce(
     (sum, saving) => sum + saving.savedAmount,
     0
@@ -452,9 +403,6 @@ function Reports() {
     </Grid>
   </CardContent>
 </Card>
-
-        {/* CARDURI PRINCIPALE */}
-
         <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 3 }}>
             <Paper
@@ -584,9 +532,6 @@ function Reports() {
             </Paper>
           </Grid>
         </Grid>
-
-        {/* PROCENT CHELTUIELI */}
-
         <Card sx={{ mb: 4 }}>
           <CardContent>
             <Typography
@@ -638,8 +583,6 @@ function Reports() {
             />
           </CardContent>
         </Card>
-
-        {/* GRAFIC VENITURI / CHELTUIELI */}
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
@@ -696,8 +639,6 @@ function Reports() {
             </Box>
           </CardContent>
         </Card>
-
-        {/* CHELTUIELI PE CATEGORII */}
 
         <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
@@ -771,8 +712,6 @@ function Reports() {
               </CardContent>
             </Card>
           </Grid>
-
-          {/* CEA MAI MARE CHELTUIALĂ */}
 
           <Grid size={{ xs: 12, md: 6 }}>
             <Card sx={{ height: "100%" }}>
@@ -871,9 +810,6 @@ function Reports() {
             </Card>
           </Grid>
         </Grid>
-
-        {/* OBIECTIVE DE ECONOMII */}
-
         <Card sx={{ mt: 4 }}>
           <CardContent>
             <Typography
