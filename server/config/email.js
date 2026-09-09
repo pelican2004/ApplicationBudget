@@ -9,8 +9,6 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-
-  // Doar pentru dezvoltare locală
   tls: {
     rejectUnauthorized: false,
   },
