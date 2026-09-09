@@ -46,14 +46,10 @@ function ForgotPassword() {
       );
 
       setMessage(res.data.message);
-
-      // Salvăm temporar emailul pentru următorul pas
       localStorage.setItem(
         "resetPasswordEmail",
         email
       );
-
-      // După o scurtă pauză mergem la verificarea codului
       setTimeout(() => {
         navigate("/verify-reset-code");
       }, 1000);
